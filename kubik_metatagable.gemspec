@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "kubik_metatagable"
-  spec.version       = "0.1.8"
+  spec.version       = "0.1.9"
   spec.authors       = ["Bart Oleszczyk"]
   spec.email         = ["bart@primate.co.uk"]
 
