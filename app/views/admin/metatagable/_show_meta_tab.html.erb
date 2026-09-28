@@ -1,0 +1,3 @@
+<%# locals: metatagable (or resource / object) %>
+<% record = local_assigns[:metatagable] || local_assigns[:resource] || local_assigns[:object] %>
+<%= render_kubik_metatag_admin_show_meta_tab(metatagable: record) %>

@@ -15,17 +15,16 @@ module KubikMetatagable
   def self.configure
     yield(configuration)
   end
-
-  module Rails
-    class Engine < ::Rails::Engine
-      isolate_namespace KubikMetatagable
-    end
-  end
 end
+
+require "kubik_metatagable/version"
+require "kubik_metatagable/social_meta_images"
+require "kubik_metatagable/engine"
 
 module Kubik
   require "kubik/metatagable"
   require "kubik/metatagable/controller_methods"
   require "kubik/metatagable/configuration"
+  require "kubik/metatagable/social_meta_resolver"
   require "kubik/permit_additional_metatagable_admin_params"
 end

@@ -1,0 +1,52 @@
+// Structural styles only — override in the host application (see kubik_metatagable README).
+.kubik-share {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35em;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    font: inherit;
+    line-height: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  &__icon-svg {
+    width: 1em;
+    height: 1em;
+    display: block;
+  }
+
+  &__label {
+    display: inline-block;
+    line-height: inherit;
+  }
+
+  &__status {
+    min-height: 1em;
+  }
+}

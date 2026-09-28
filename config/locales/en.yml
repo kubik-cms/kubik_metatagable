@@ -1,0 +1,6 @@
+en:
+  kubik:
+    metatagable:
+      share_button:
+        label: "Copy link to share"
+        copied: "Link copied"

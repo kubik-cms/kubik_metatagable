@@ -108,6 +108,17 @@ And you can add similar setup to show action:
   end
 ```
 
+### Social link previews (admin)
+
+Resolve meta fields in your host app, then render the shared preview cards from `kubik_interface_elements`:
+
+```erb
+<% meta = MyMetaResolver.resolve(resource, host: request.base_url) %>
+<%= render "kubik/metatagable/social_share_previews", meta: meta %>
+```
+
+Requires `kubik_interface_elements` and `@import 'kubik_interface_elements'` in your admin stylesheet.
+
 To consume the meta tags in your view, add the tags partial to your applications `head` tag:
 ```html
 <head>
@@ -131,6 +142,38 @@ class PagesController < KubikController
 end
 
 ```
+
+## Share button
+
+After `insert_kubik_meta_tags`, render a copy-to-clipboard share control:
+
+```erb
+<%= kubik_share_button %>
+<%= kubik_share_button(variant: :meta) %>
+```
+
+Register the Stimulus controller in the host app (`kubik_metatagable/share_controller`) and import gem styles:
+
+```scss
+@import 'kubik_metatagable/share_button';
+```
+
+Override appearance per project (host styles load after the gem):
+
+```scss
+@import 'kubik/share_button'; // your overrides
+```
+
+Optional button classes per variant:
+
+```ruby
+KubikMetatagable.configure do |config|
+  config.share_button_meta_classes = "news-article__date"
+  config.share_button_footer_classes = "button button--blue button--small"
+end
+```
+
+Override markup by copying `app/views/kubik/metatagable/_share_button.html.erb` into the host app.
 
 ## Development
 

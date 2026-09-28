@@ -13,6 +13,26 @@ module Kubik
       meta[attr]
     end
 
+    def kubik_share_data
+      {
+        title: kubik_meta_data(:og_title).presence || kubik_page_title,
+        text: kubik_meta_data(:og_description).presence || kubik_meta_data(:meta_description),
+        url: kubik_meta_data(:og_url).presence || request.original_url
+      }.compact
+    end
+
+    def kubik_share_button(variant: :footer, button_class: nil, share_data: nil, **locals)
+      render(
+        partial: "kubik/metatagable/share_button",
+        locals: {
+          variant: variant,
+          button_class: button_class,
+          share_data: share_data || kubik_share_data,
+          **locals
+        }
+      )
+    end
+
     def kubik_site_meta_data
       @kubik_site_meta_data ||=
         if KubikMetatagable.configuration.settings_class.present?

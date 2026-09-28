@@ -1,0 +1,34 @@
+<% variant = local_assigns.fetch(:variant, :footer).to_sym %>
+<% variant = :meta if variant == :inline %>
+<% data = local_assigns.fetch(:share_data) %>
+<% config = KubikMetatagable.configuration %>
+<% configured_classes = variant == :meta ? config.share_button_meta_classes : config.share_button_footer_classes %>
+<% button_classes = [
+  "kubik-share__button",
+  configured_classes,
+  local_assigns[:button_class]
+].compact_blank.join(" ") %>
+<% label = t("kubik.metatagable.share_button.label") %>
+<% copied = t("kubik.metatagable.share_button.copied") %>
+
+<%= tag.div(
+  class: class_names("kubik-share", "kubik-share--#{variant}"),
+  data: {
+    controller: "share",
+    share_title_value: data[:title],
+    share_text_value: data[:text],
+    share_url_value: data[:url],
+    share_copy_label_value: label,
+    share_copied_label_value: copied
+  }
+) do %>
+  <button type="button" class="<%= button_classes %>" data-action="share#share">
+    <span class="kubik-share__icon" aria-hidden="true">
+      <%= render "kubik/metatagable/share_icon" %>
+    </span>
+    <span class="kubik-share__label" data-share-target="label"><%= label %></span>
+  </button>
+  <% unless variant == :meta %>
+    <span class="kubik-share__status" data-share-target="status" role="status" aria-live="polite"></span>
+  <% end %>
+<% end %>
