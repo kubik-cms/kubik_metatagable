@@ -1,0 +1,31 @@
+# frozen_string_literal: true
+
+class AddSeoSettingsToKubikMetaTags < ActiveRecord::Migration<%= migration_version %>
+  def change
+    return unless table_exists?(:kubik_meta_tags)
+
+    change_table :kubik_meta_tags, bulk: true do |t|
+      unless column_exists?(:kubik_meta_tags, :share_enabled)
+        t.boolean :share_enabled, null: false, default: true
+      end
+      unless column_exists?(:kubik_meta_tags, :robots_noindex)
+        t.boolean :robots_noindex, null: false, default: false
+      end
+      unless column_exists?(:kubik_meta_tags, :robots_nofollow)
+        t.boolean :robots_nofollow, null: false, default: false
+      end
+      unless column_exists?(:kubik_meta_tags, :robots_noarchive)
+        t.boolean :robots_noarchive, null: false, default: false
+      end
+      unless column_exists?(:kubik_meta_tags, :robots_nosnippet)
+        t.boolean :robots_nosnippet, null: false, default: false
+      end
+      unless column_exists?(:kubik_meta_tags, :block_ai_crawlers)
+        t.boolean :block_ai_crawlers, null: false, default: false
+      end
+      unless column_exists?(:kubik_meta_tags, :canonical_url_override)
+        t.string :canonical_url_override
+      end
+    end
+  end
+end

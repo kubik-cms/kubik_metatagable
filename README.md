@@ -76,18 +76,25 @@ Then you should add additional fileds to form setup:
         end
       end
       tab "SEO" do
-        render "admin/form/meta_tag_seo_helper", f: f
+        render "admin/metatagable/form_seo_tab", f: f
       end
-      tab "Social Media" do
-        render "admin/form/meta_tag_social_helper", f: f
+      tab "Social" do
+        render "admin/metatagable/form_social_tab", f: f
       end
+```
+
+Use **`.html.arb`** tab partials (provided by this gem). Do not wrap them in ERB that calls `f.inputs` again — Active Admin + Arbre would render the fields twice.
+
+Optional **AI meta suggestions** in the fieldset header: define `kubik_ai_metatag_form_actions(metatagable, focus)` in the host app (see `kubik_ai`). The gem calls `kubik_metatagable_form_header_actions` when present.
+
+Fieldset chrome (CSS + header partial) comes from **`active_admin_kubik`** (`active_admin/kubik/fieldset_header`, `kubik_admin_fieldset.scss`).
+
     end
     f.actions
   end
 ```
 
 And you can add similar setup to show action:
-
 
 ```
   show do |example|
@@ -99,10 +106,10 @@ And you can add similar setup to show action:
         end
       end
       tab "SEO" do
-        render "admin/show/meta_tag_seo_helper", object: example
+        render "admin/metatagable/show_seo_tab", metatagable: example
       end
-      tab "Social Media" do
-        render "admin/show/meta_tag_social_helper", object: example
+      tab "Social" do
+        render "admin/metatagable/show_social_tab", metatagable: example
       end
     end
   end
@@ -120,12 +127,29 @@ Resolve meta fields in your host app, then render the shared preview cards from 
 Requires `kubik_interface_elements` and `@import 'kubik_interface_elements'` in your admin stylesheet.
 
 To consume the meta tags in your view, add the tags partial to your applications `head` tag:
-```html
+
+```erb
 <head>
   ...
   <%= render 'kubik/meta_tags' %>
+  <% if (robots_content = kubik_robots_meta_content).present? %>
+    <meta name="robots" content="<%= robots_content %>">
+  <% end %>
+  <% if (canonical_href = kubik_canonical_href).present? %>
+    <link rel="canonical" href="<%= canonical_href %>">
+  <% end %>
 </head>
 ```
+
+Configure how canonical URLs are resolved (host app must define the helper, e.g. `canonical_url`):
+
+```ruby
+KubikMetatagable.configure do |config|
+  config.canonical_url_method = :canonical_url
+end
+```
+
+Run `rails g kubik:metatagable:install` (or copy the `add_seo_settings_to_kubik_meta_tags` migration) after upgrading to add per-record SEO columns: share button toggle, robots directives, canonical override, and AI crawler hints.
 
 For your controller action, you'll need to include the appropriate view helpers and controller methods. We'd recommend creating a subclass of ApplicationController to use for your Kubik views. This will prevent any bloat in your 'admin' controllers:
 ```
@@ -148,21 +172,18 @@ end
 After `insert_kubik_meta_tags`, render a copy-to-clipboard share control:
 
 ```erb
-<%= kubik_share_button %>
-<%= kubik_share_button(variant: :meta) %>
+<%= render_kubik_share_section %>
+<%= kubik_share_button(variant: :meta) if kubik_share_enabled? %>
 ```
 
 Register the Stimulus controller in the host app (`kubik_metatagable/share_controller`) and import gem styles:
 
 ```scss
 @import 'kubik_metatagable/share_button';
+@import 'kubik/share_button'; // host overrides (margins, button look)
 ```
 
-Override appearance per project (host styles load after the gem):
-
-```scss
-@import 'kubik/share_button'; // your overrides
-```
+If you mirror `_share_button.scss` under `app/assets/stylesheets/kubik_metatagable/`, copy `_share_section.scss` from the gem too, or keep section spacing in your override file.
 
 Optional button classes per variant:
 

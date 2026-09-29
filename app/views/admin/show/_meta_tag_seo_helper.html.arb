@@ -1,4 +1,29 @@
-attributes_table_for resource.meta_tag do
-  row :title_tag
-  row :meta_description
+seo_table = proc do
+  attributes_table_for resource.meta_tag || Kubik::MetaTag.new do
+    row :title_tag
+    row :meta_description
+    row :canonical_url_override do |meta|
+      meta.canonical_url_override.presence || status_tag("Default URL", class: "ok")
+    end
+    row :share_enabled do |meta|
+      meta.share_enabled? ? status_tag("Yes", class: "yes") : status_tag("No", class: "no")
+    end
+    row "Robots" do |meta|
+      meta.robots_meta_content.presence || status_tag("Default (index, follow)", class: "ok")
+    end
+    row :block_ai_crawlers do |meta|
+      meta.block_ai_crawlers? ? status_tag("Blocked", class: "yes") : status_tag("Allowed", class: "ok")
+    end
+  end
+end
+
+if local_assigns.fetch(:wrap_fieldset, true)
+  div class: "kubik-admin-fieldset" do
+    render partial: helpers.kubik_metatagable_fieldset_header_partial, locals: { title: "Search & sharing" }
+    div class: "kubik-admin-fieldset__body" do
+      instance_eval(&seo_table)
+    end
+  end
+else
+  instance_eval(&seo_table)
 end

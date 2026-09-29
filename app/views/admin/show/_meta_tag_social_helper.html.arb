@@ -1,14 +1,27 @@
-attributes_table_for resource.meta_tag do
-  row :og_title
-  row :og_description
-  row :og_type
-  row :og_image do 
-    image_tag resource.meta_tag.og_image_upload.image_url(:square_400) if resource.meta_tag&.og_image_upload&.image_url(:square_400).present?
+social_table = proc do
+  attributes_table_for resource.meta_tag do
+    row :og_title
+    row :og_description
+    row :og_type
+    row :og_image do
+      image_tag resource.meta_tag.og_image_upload.image_url(:square_400) if resource.meta_tag&.og_image_upload&.image_url(:square_400).present?
+    end
+    row :twitter_title
+    row :twitter_description
+    row :twitter_media do
+      image_tag resource.meta_tag.twitter_image_upload.image_url(:square_400) if resource.meta_tag&.twitter_image_upload&.image_url(:square_400).present?
+    end
+    row :twitter_card_type
   end
-  row :twitter_title
-  row :twitter_description
-  row :twitter_media do 
-    image_tag resource.meta_tag.twitter_image_upload.image_url(:square_400) if resource.meta_tag&.twitter_image_upload&.image_url(:square_400).present?
+end
+
+if local_assigns.fetch(:wrap_fieldset, true)
+  div class: "kubik-admin-fieldset" do
+    render partial: helpers.kubik_metatagable_fieldset_header_partial, locals: { title: "Social sharing" }
+    div class: "kubik-admin-fieldset__body" do
+      instance_eval(&social_table)
+    end
   end
-  row :twitter_card_type
+else
+  instance_eval(&social_table)
 end

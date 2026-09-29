@@ -16,6 +16,11 @@ module Kubik
                              migration_version: migration_version)
         end
 
+        def install_notice
+          say "After updating kubik_metatagable, run: bin/rails kubik:metatagable:upgrade", :green
+          say "Then: bin/rails db:migrate", :green
+        end
+
         private
 
         def migration_version
