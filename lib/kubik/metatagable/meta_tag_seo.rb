@@ -6,6 +6,8 @@ module Kubik
       extend ActiveSupport::Concern
 
       def robots_meta_content
+        return nil unless has_attribute?(:robots_noindex)
+
         directives = []
         directives << "noindex" if robots_noindex?
         directives << "nofollow" if robots_nofollow?

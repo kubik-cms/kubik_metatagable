@@ -5,17 +5,23 @@ module Kubik
     def kubik_share_enabled?
       meta_tag = kubik_current_meta_tag
       return true if meta_tag.nil?
+      return true unless meta_tag.has_attribute?(:share_enabled)
 
       meta_tag.share_enabled?
     end
 
     def kubik_robots_meta_content
-      kubik_current_meta_tag&.robots_meta_content
+      meta_tag = kubik_current_meta_tag
+      return nil unless meta_tag&.has_attribute?(:robots_noindex)
+
+      meta_tag.robots_meta_content
     end
 
     def kubik_canonical_href
       meta_tag = kubik_current_meta_tag
-      override = meta_tag&.canonical_url_override.presence
+      override = if meta_tag&.has_attribute?(:canonical_url_override)
+        meta_tag.canonical_url_override.presence
+      end
       return override if override
 
       method_name = KubikMetatagable.configuration.canonical_url_method

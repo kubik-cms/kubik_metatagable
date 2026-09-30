@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.2.3] - 2026-09-30
+
+### Fixed
+
+- SEO view helpers and `robots_meta_content` no longer raise when `kubik_meta_tags` SEO columns are missing (e.g. before `rails g kubik:metatagable:upgrade` and `db:migrate`).
+
 ## [0.1.11] - 2026-09-28
 
 ### Added
