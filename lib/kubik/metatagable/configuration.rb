@@ -8,6 +8,7 @@ module Kubik
       attr_accessor :share_button_footer_classes
       attr_accessor :social_image_derivative
       attr_accessor :default_og_type_resolver
+      attr_accessor :canonical_url_method
 
       def initialize
         @canonical_path_resolvers = {}

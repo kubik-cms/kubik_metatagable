@@ -4,6 +4,7 @@ module Kubik
   module Metatagable
     module ControllerMethods
       def insert_kubik_meta_tags(metatagable)
+        @kubik_metatagable = metatagable
         meta_tags = metatagable.meta_tag || ::Kubik::MetaTag.new
         merged_title = KubikMetatagable.configuration.settings_class.instance.meta_tag.present? &&
                        KubikMetatagable.configuration.settings_class.instance.meta_tag[:site_name].present? ?

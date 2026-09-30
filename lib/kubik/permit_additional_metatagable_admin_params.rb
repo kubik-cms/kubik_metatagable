@@ -15,7 +15,9 @@ module Kubik
     def meta_tag_attributes(klass)
       {
         meta_tag_attributes: [
-          :id, :title_tag, :meta_description, :og_type, :og_title, :og_description, :og_image,
+          :id, :title_tag, :meta_description, :canonical_url_override, :share_enabled,
+          :robots_noindex, :robots_nofollow, :robots_noarchive, :robots_nosnippet, :block_ai_crawlers,
+          :og_type, :og_title, :og_description, :og_image,
           :twitter_title, :twitter_description, :twitter_media, :twitter_card_type,
           og_image_upload_attributes: [:kubik_media_upload_id, :id, :_destroy],
           twitter_image_upload_attributes: [:kubik_media_upload_id, :id, :_destroy]

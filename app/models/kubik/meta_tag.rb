@@ -2,6 +2,8 @@
 
 module Kubik
   class MetaTag < ApplicationRecord
+    include Kubik::Metatagable::MetaTagSeo
+
     self.table_name = "kubik_meta_tags"
 
     belongs_to :metatagable, polymorphic: true

@@ -26,5 +26,6 @@ module Kubik
   require "kubik/metatagable/controller_methods"
   require "kubik/metatagable/configuration"
   require "kubik/metatagable/social_meta_resolver"
+  require "kubik/metatagable/meta_tag_seo"
   require "kubik/permit_additional_metatagable_admin_params"
 end
