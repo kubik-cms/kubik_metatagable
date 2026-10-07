@@ -4,12 +4,19 @@ social_table = proc do
     row :og_description
     row :og_type
     row :og_image do
-      image_tag resource.meta_tag.og_image_upload.image_url(:square_400) if resource.meta_tag&.og_image_upload&.image_url(:square_400).present?
+      og_upload = resource.meta_tag&.og_image_upload
+      if og_upload&.image_url(:social_og).present?
+        image_tag og_upload.image_url(:social_og)
+      end
     end
     row :twitter_title
     row :twitter_description
     row :twitter_media do
-      image_tag resource.meta_tag.twitter_image_upload.image_url(:square_400) if resource.meta_tag&.twitter_image_upload&.image_url(:square_400).present?
+      twitter_upload = resource.meta_tag&.twitter_image_upload
+      if twitter_upload.present?
+        derivative = KubikMetatagable::SocialMetaImages.derivative_for(platform: :twitter, meta_tag: resource.meta_tag)
+        image_tag twitter_upload.image_url(derivative) if twitter_upload.image_url(derivative).present?
+      end
     end
     row :twitter_card_type
   end

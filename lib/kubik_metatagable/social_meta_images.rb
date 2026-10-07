@@ -3,13 +3,30 @@
 module KubikMetatagable
   # Builds absolute URLs for Open Graph / Twitter images (Shrine uploads or paths).
   module SocialMetaImages
-    DEFAULT_DERIVATIVE = :content_1200
+    DEFAULT_DERIVATIVE = :social_og
+    TWITTER_SUMMARY_DERIVATIVE = :social_twitter_small
+    TWITTER_LARGE_DERIVATIVE = :social_twitter_large
 
     module_function
 
-    def image_url(upload, host:, derivative: DEFAULT_DERIVATIVE)
+    def derivative_for(platform:, meta_tag: nil)
+      override = KubikMetatagable.configuration.social_image_derivative
+      return override if override.present?
+
+      case platform.to_sym
+      when :twitter
+        meta_tag&.twitter_card_type.to_s == "summary" ? TWITTER_SUMMARY_DERIVATIVE : TWITTER_LARGE_DERIVATIVE
+      when :og, :facebook, :linkedin
+        DEFAULT_DERIVATIVE
+      else
+        DEFAULT_DERIVATIVE
+      end
+    end
+
+    def image_url(upload, host:, derivative: nil, platform: nil, meta_tag: nil)
       return unless upload.present?
 
+      derivative ||= derivative_for(platform: platform || :og, meta_tag: meta_tag)
       absolute_url(upload.image_url(derivative, host: host), host: host)
     end
 

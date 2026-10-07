@@ -62,7 +62,8 @@ module Kubik
           KubikMetatagable::SocialMetaImages.image_url(
             upload,
             host: @host,
-            derivative: @config.social_image_derivative
+            platform: platform,
+            meta_tag: meta_tag
           )
         else
           raw = platform == :twitter ? meta_tag.twitter_media : meta_tag.og_image

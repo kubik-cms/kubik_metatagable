@@ -12,7 +12,8 @@ module Kubik
 
       def initialize
         @canonical_path_resolvers = {}
-        @social_image_derivative = KubikMetatagable::SocialMetaImages::DEFAULT_DERIVATIVE
+        # When set, forces this derivative for all platforms (overrides social crop defaults).
+        @social_image_derivative = nil
       end
 
       def register_canonical_path(model_name, &block)
