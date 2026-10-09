@@ -1,0 +1,21 @@
+<%# locals: summary, record %>
+<ul class="kubik-reporting-summary" role="list">
+  <% Kubik::ReportingAdminHelper::SUMMARY_ITEMS.each do |item| %>
+    <% result = summary[item[:key]] || {} %>
+    <% status = (result[:status] || :unknown).to_s %>
+    <li class="kubik-reporting-summary__item">
+      <a class="kubik-reporting-summary__link"
+         href="<%= kubik_reporting_summary_href(record, item) %>"
+         <% if kubik_reporting_summary_offcanvas?(item) %>
+           data-action="click->kubik-offcanvas#openOffcanvas"
+           data-kubik-offcanvas-header-text="<%= item[:label] %>"
+           data-kubik-offcanvas-tone="white"
+         <% end %>
+         title="<%= item[:label] %>: <%= result[:label] || status.humanize %>">
+        <span class="kubik-reporting-indicator kubik-reporting-indicator--<%= status %>"
+              aria-hidden="true"></span>
+        <span class="kubik-reporting-summary__label"><%= item[:label] %></span>
+      </a>
+    </li>
+  <% end %>
+</ul>

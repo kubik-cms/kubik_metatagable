@@ -5,17 +5,22 @@ social_table = proc do
     row :og_type
     row :og_image do
       og_upload = resource.meta_tag&.og_image_upload
-      if og_upload&.image_url(:social_og).present?
-        image_tag og_upload.image_url(:social_og)
+      thumb_url = helpers.kubik_metatag_social_upload_thumbnail_url(og_upload)
+      if thumb_url.present?
+        helpers.image_tag thumb_url, alt: "", class: "kubik-metatagable-social-upload-thumb"
+      else
+        status_tag("Not set", class: "no")
       end
     end
     row :twitter_title
     row :twitter_description
     row :twitter_media do
       twitter_upload = resource.meta_tag&.twitter_image_upload
-      if twitter_upload.present?
-        derivative = KubikMetatagable::SocialMetaImages.derivative_for(platform: :twitter, meta_tag: resource.meta_tag)
-        image_tag twitter_upload.image_url(derivative) if twitter_upload.image_url(derivative).present?
+      thumb_url = helpers.kubik_metatag_social_upload_thumbnail_url(twitter_upload)
+      if thumb_url.present?
+        helpers.image_tag thumb_url, alt: "", class: "kubik-metatagable-social-upload-thumb"
+      else
+        status_tag("Not set", class: "no")
       end
     end
     row :twitter_card_type

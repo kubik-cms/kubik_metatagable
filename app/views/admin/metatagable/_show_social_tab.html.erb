@@ -1,9 +1,14 @@
 <% record = local_assigns[:metatagable] || local_assigns[:resource] || local_assigns[:object] %>
 <% host = local_assigns[:host] || request.base_url %>
-<%= render_kubik_metatag_admin_show_social(metatagable: record) %>
-<div class="kubik-admin-fieldset">
-  <%= render "admin/shared/fieldset_header", title: "Link previews" %>
-  <div class="kubik-admin-fieldset__body">
-    <%= render_kubik_metatag_social_share_previews(metatagable: record, host: host) %>
+<div class="kubik-admin-show-panels">
+  <div class="kubik-admin-fieldset panel__double">
+    <%= render_kubik_metatag_admin_show_social(metatagable: record) %>
+  </div>
+  <div class="kubik-admin-fieldset panel__double">
+    <%= render partial: Kubik::MetatagAdminHelper.resolve_fieldset_header_partial(lookup_context),
+               locals: { title: "Link previews" } %>
+    <div class="kubik-admin-fieldset__body kubik-metatagable-social-previews">
+      <%= render_kubik_metatag_social_share_previews(metatagable: record, host: host) %>
+    </div>
   </div>
 </div>

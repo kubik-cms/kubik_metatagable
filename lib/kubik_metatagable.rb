@@ -28,4 +28,5 @@ module Kubik
   require "kubik/metatagable/social_meta_resolver"
   require "kubik/metatagable/meta_tag_seo"
   require "kubik/permit_additional_metatagable_admin_params"
+  require "kubik/reporting"
 end

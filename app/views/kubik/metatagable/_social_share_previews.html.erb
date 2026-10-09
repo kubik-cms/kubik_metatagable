@@ -1,6 +1,7 @@
 <%# locals: meta — resolved OG/Twitter hash from the host app (see kubik_interface_elements doc) %>
 <% if respond_to?(:render_kubik_social_share_previews) %>
-  <%= render_kubik_social_share_previews(meta: meta) %>
+  <% preview_class = local_assigns[:admin_compact] ? "kubik-social-share-previews--admin-compact" : nil %>
+  <%= render_kubik_social_share_previews(meta: meta, html_class: preview_class) %>
 <% else %>
   <p class="inline-hints">
     Link previews require <code>kubik_interface_elements</code> (see <code>render_kubik_social_share_previews</code>).

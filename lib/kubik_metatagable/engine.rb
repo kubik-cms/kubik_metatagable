@@ -6,6 +6,7 @@ module KubikMetatagable
 
     # Loaded explicitly so ActionView can include it during lazy hooks.
     require File.expand_path("../../app/helpers/kubik/metatag_admin_helper", __dir__)
+    require File.expand_path("../../app/helpers/kubik/reporting_admin_helper", __dir__)
 
     initializer "kubik_metatagable.assets" do |app|
       %w[javascripts stylesheets].each do |asset_dir|
@@ -25,6 +26,7 @@ module KubikMetatagable
     initializer "kubik_metatagable.action_view" do
       ActiveSupport.on_load(:action_view) do
         include Kubik::MetatagAdminHelper
+        include Kubik::ReportingAdminHelper
       end
     end
   end

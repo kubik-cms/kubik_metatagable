@@ -1,3 +1,4 @@
 <%# locals: metatagable (or resource / object) %>
 <% record = local_assigns[:metatagable] || local_assigns[:resource] || local_assigns[:object] %>
 <%= render_kubik_metatag_admin_show_seo(metatagable: record) %>
+<%= render_kubik_reporting_seo_reports(metatagable: record, host: local_assigns[:host]) %>
