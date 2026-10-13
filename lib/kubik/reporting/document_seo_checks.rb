@@ -78,6 +78,24 @@ module Kubik
           )
         end
 
+        unresolved_nav = doc.css("a[data-kubik-nav-broken]").length
+        if unresolved_nav.positive?
+          return linter_issue(
+            :amber,
+            "#{unresolved_nav} navigation link#{'s' if unresolved_nav != 1} could not be resolved",
+            code: "unresolved_navigable_link"
+          )
+        end
+
+        non_canonical = doc.css("a[data-kubik-nav-noncanonical]").length
+        if non_canonical.positive?
+          return linter_issue(
+            :amber,
+            "#{non_canonical} link#{'s' if non_canonical != 1} point at a non-canonical navigation URI",
+            code: "noncanonical_navigable_link"
+          )
+        end
+
         hrefs = doc.css("a[href]").filter_map { |node| node["href"]&.strip }.reject(&:blank?)
         return :ok if hrefs.empty?
 
