@@ -145,4 +145,32 @@ class KubikReportingTest < ActiveSupport::TestCase
     assert_equal :red, broken[:status]
     assert_equal "broken_link", broken[:code]
   end
+
+  test "seo broken links are unchanged without kubik-nav markup" do
+    html = '<html><head><title>T</title></head><body><h1>T</h1><a href="/about">x</a></body></html>'
+    document = Kubik::Reporting::RenderedDocument.new(html)
+    checker = Class.new do
+      def self.check(*)
+        []
+      end
+    end
+
+    result = Kubik::Reporting::DocumentSeoChecks.evaluate_broken_links(
+      document.nokogiri_document,
+      host: "https://example.test",
+      checker: checker
+    )
+    assert_equal :ok, result
+  end
+
+  test "seo flags unresolved kubik-nav attributes when present" do
+    html = '<html><body><a href="#" data-kubik-nav-broken="true">x</a></body></html>'
+    document = Kubik::Reporting::RenderedDocument.new(html)
+    result = Kubik::Reporting::DocumentSeoChecks.evaluate_broken_links(
+      document.nokogiri_document,
+      host: "https://example.test"
+    )
+    assert_equal :amber, result[:status]
+    assert_equal "unresolved_navigable_link", result[:code]
+  end
 end

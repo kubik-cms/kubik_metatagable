@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.3.2] - 2026-10-13
+
+### Added
+
+- SEO broken-link check optionally flags `data-kubik-nav-broken` / `data-kubik-nav-noncanonical` when kubik_navigation rewrote those links. Markup without those attributes is unchanged (safe to deploy without a navigation gem upgrade).
+
 ## [0.3.0] - 2026-09-30
 
 ### Fixed

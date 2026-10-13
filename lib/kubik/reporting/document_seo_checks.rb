@@ -78,6 +78,8 @@ module Kubik
           )
         end
 
+        # Optional: only present when kubik_navigation rewrites data-kubik-nav.
+        # Apps without that gem (or older HTML) simply have zero matches — no extra findings.
         unresolved_nav = doc.css("a[data-kubik-nav-broken]").length
         if unresolved_nav.positive?
           return linter_issue(
