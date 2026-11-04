@@ -2,24 +2,34 @@
 
 module Kubik
   module ReportingAdminHelper
-    SUMMARY_ITEMS = [
-      { key: :html_validation, label: "HTML validity", offcanvas_panel: :html_quality_panel },
-      { key: :seo, label: "SEO", tab_hash: "seo", anchor: "seo-reports" },
-      { key: :sharing, label: "Sharing", tab_hash: "social", anchor: "social" }
-    ].freeze
+    def self.summary_items(record = nil)
+      Kubik::Reporting::Registry.ui_items(record)
+    end
+
+    def kubik_reporting_summary_items(record = nil)
+      Kubik::Reporting::Registry.ui_items(record)
+    end
 
     def kubik_reporting_summary(record, host: request.base_url)
       Kubik::Reporting.summary_for(record, host: host)
     end
 
+    def kubik_reporting_check_report(record, key, host: request.base_url, refresh: false)
+      return Kubik::Reporting::Registry.run_live_check(key, record, host: host) if refresh
+
+      stored = Kubik::Reporting::Persistence.check(record, key)
+      return stored if stored.present?
+
+      { status: :unknown, label: "Not checked", findings: [], linters: [] }
+    end
+
     def render_kubik_reporting_summary(record, host: request.base_url)
-      summary = kubik_reporting_summary(record, host: host)
-      render partial: "kubik/reporting/summary_indicators",
-             locals: { summary: summary, record: record }
+      render partial: "admin/kubik/content_resource_status_summary",
+             locals: { record: record, variant: :compact, host: host }
     end
 
     def render_kubik_reporting_seo_reports(metatagable:, host: request.base_url)
-      report = Kubik::Reporting::SeoReport.for(metatagable, host: host)
+      report = kubik_reporting_check_report(metatagable, :seo, host: host)
       render partial: "kubik/reporting/seo_reports_panel", locals: { report: report }
     end
 
@@ -40,8 +50,10 @@ module Kubik
       public_send("#{panel_action}_admin_#{route_key}_path", record)
     end
 
-    def kubik_reporting_summary_offcanvas?(item)
-      item[:offcanvas_panel].present?
+    def kubik_reporting_summary_offcanvas?(record, item)
+      item[:offcanvas_panel].present? &&
+        respond_to?(:kubik_html_quality_enabled?) &&
+        kubik_html_quality_enabled?(record)
     end
   end
 end

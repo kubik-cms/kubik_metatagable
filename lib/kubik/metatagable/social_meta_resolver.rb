@@ -27,18 +27,19 @@ module Kubik
 
         og_image = social_image(meta_tag, :og)
         twitter_image = social_image(meta_tag, :twitter)
+        og_description = meta_tag.og_description.presence || meta_tag.meta_description.presence || default_description
 
         {
           title_tag: merged_title,
           meta_description: meta_tag.meta_description.presence || default_description,
           og_title: meta_tag.og_title.presence || title_tag,
-          og_description: meta_tag.og_description.presence || meta_tag.meta_description.presence || default_description,
+          og_description: og_description,
           og_image: og_image,
           og_url: canonical_url,
           og_type: meta_tag.og_type.presence || @config.default_og_type_for(@record),
           twitter_card_type: meta_tag.twitter_card_type.presence || "summary_large_image",
           twitter_title: meta_tag.twitter_title.presence || meta_tag.og_title.presence || title_tag,
-          twitter_description: meta_tag.twitter_description.presence || meta_tag.og_description.presence || default_description,
+          twitter_description: meta_tag.twitter_description.presence || og_description,
           twitter_image: twitter_image
         }
       end
@@ -47,11 +48,13 @@ module Kubik
 
       def site_meta_data
         settings_class = @config.settings_class
-        if settings_class.present?
-          settings_class.instance.meta_tag.attributes.symbolize_keys
-        else
-          {}
-        end
+        return {} unless settings_class.present?
+
+        setting = settings_class.instance
+        meta = setting.meta_tag.attributes.symbolize_keys
+        hash = setting.respond_to?(:settings_hash) ? setting.settings_hash.to_h.with_indifferent_access : {}
+        meta[:site_title] ||= hash[:site_title]
+        meta
       rescue StandardError
         {}
       end

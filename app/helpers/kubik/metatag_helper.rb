@@ -9,7 +9,9 @@ module Kubik
     end
 
     def kubik_meta_data(attr)
-      meta = kubik_site_meta_data.symbolize_keys.merge(compact_override)
+      meta = kubik_site_meta_data.symbolize_keys
+      meta = meta.merge(@kubik_settings.symbolize_keys) if @kubik_settings.present?
+      meta = meta.merge(compact_override)
       meta[attr]
     end
 

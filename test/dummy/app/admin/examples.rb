@@ -37,6 +37,9 @@ ActiveAdmin.register Example do
       tab "SEO" do
         render "admin/show/meta_tag_seo_helper", object: example
       end
+      tab "GEO" do
+        render "admin/metatagable/show_geo_tab", metatagable: example
+      end
       tab "Social Media" do
         render "admin/show/meta_tag_social_helper", object: example
       end

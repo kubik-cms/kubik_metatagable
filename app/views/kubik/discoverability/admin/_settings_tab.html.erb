@@ -1,0 +1,123 @@
+<% settings = (resource.settings_hash || {}).with_indifferent_access %>
+<% generated = Kubik::Discoverability::RobotsTxtBuilder.generate(settings) %>
+<% catalog_version = Kubik::Discoverability::BotCatalog.version %>
+<% sync = settings[:crawler_catalog_sync] || {} %>
+
+<div class="kubik-discoverability-admin">
+  <p>
+    <strong>AI Crawler Index version:</strong> <%= catalog_version %>
+    <% if sync[:new_count].to_i.positive? %>
+      — <strong><%= sync[:new_count] %></strong> token(s) in live index not in bundled gem.
+    <% end %>
+  </p>
+
+  <%= form_with url: admin_kubik_setting_path(resource), method: :patch, local: true do %>
+    <%= hidden_field_tag "setting[discoverability_settings]", "", id: "discoverability_settings_json" %>
+
+    <fieldset class="inputs">
+      <legend><span>robots.txt (hybrid)</span></legend>
+      <ol>
+        <li class="boolean input optional">
+          <label>
+            <%= check_box_tag "disc_robots_block_admin", "1", settings.fetch(:robots_block_admin_paths, true), name: "disc_robots_block_admin" %>
+            Always disallow <code>/admin/</code>
+          </label>
+        </li>
+        <li class="string input optional">
+          <%= label_tag "disc_sitemap_url", "Sitemap URL" %>
+          <%= text_field_tag "disc_sitemap_url", settings[:sitemap_url], class: "string" %>
+        </li>
+        <li class="boolean input optional">
+          <label>
+            <%= check_box_tag "disc_robots_lock", "1", settings[:robots_txt_lock_custom], name: "disc_robots_lock" %>
+            Lock custom robots.txt (do not overwrite on regenerate)
+          </label>
+        </li>
+        <li class="text input optional">
+          <%= label_tag "disc_robots_generated", "Generated preview (read-only)" %>
+          <%= text_area_tag "disc_robots_generated", generated, rows: 12, readonly: true %>
+        </li>
+        <li class="text input optional">
+          <%= label_tag "disc_robots_body", "Served robots.txt body" %>
+          <%= text_area_tag "disc_robots_body", settings[:robots_txt_body].presence || generated, rows: 12 %>
+        </li>
+      </ol>
+    </fieldset>
+
+    <fieldset class="inputs">
+      <legend><span>llms.txt</span></legend>
+      <% if respond_to?(:kubik_llms_txt_form_actions) %>
+        <p class="actions"><%= kubik_llms_txt_form_actions(resource) %></p>
+        <% draft = settings[:llms_txt_ai_draft] %>
+        <% if draft.present? %>
+          <p><strong>AI draft:</strong></p>
+          <pre><%= draft %></pre>
+          <%= button_to "Apply AI draft", kubik_ai_apply_llms_txt_admin_kubik_setting_path(resource), method: :post %>
+        <% end %>
+      <% end %>
+      <ol>
+        <li class="boolean input optional">
+          <label>
+            <%= check_box_tag "disc_llms_policy", "1", settings.fetch(:llms_txt_include_policy_summary, true), name: "disc_llms_policy" %>
+            Append crawler policy summary when serving
+          </label>
+        </li>
+        <li class="text input optional">
+          <%= label_tag "disc_llms_body", "llms.txt body (Markdown)" %>
+          <%= text_area_tag "disc_llms_body", settings[:llms_txt_body], rows: 16 %>
+        </li>
+      </ol>
+    </fieldset>
+
+    <fieldset class="inputs">
+      <legend><span>Schema.org (global)</span></legend>
+      <ol>
+        <li class="string input optional">
+          <%= label_tag "disc_org_name", "Organization name" %>
+          <%= text_field_tag "disc_org_name", settings.dig(:schema_organization, :name) || settings["schema_organization_name"], class: "string" %>
+        </li>
+        <li class="string input optional">
+          <%= label_tag "disc_org_url", "Organization URL" %>
+          <%= text_field_tag "disc_org_url", settings.dig(:schema_organization, :url) || settings["schema_organization_url"], class: "string" %>
+        </li>
+        <li class="string input optional">
+          <%= label_tag "disc_org_logo", "Logo URL" %>
+          <%= text_field_tag "disc_org_logo", settings.dig(:schema_organization, :logo) || settings["schema_organization_logo"], class: "string" %>
+        </li>
+      </ol>
+    </fieldset>
+
+    <div class="actions">
+      <%= submit_tag "Save discoverability settings" %>
+      <%= link_to "Regenerate robots.txt from policy",
+                  regenerate_robots_txt_admin_kubik_setting_path(resource),
+                  method: :post,
+                  class: "button" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  (function() {
+    const form = document.querySelector('.kubik-discoverability-admin form');
+    if (!form) return;
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const payload = {
+        robots_block_admin_paths: document.querySelector('[name=disc_robots_block_admin]')?.checked || false,
+        sitemap_url: document.querySelector('[name=disc_sitemap_url]')?.value || '',
+        robots_txt_lock_custom: document.querySelector('[name=disc_robots_lock]')?.checked || false,
+        robots_txt_body: document.querySelector('[name=disc_robots_body]')?.value || '',
+        llms_txt_include_policy_summary: document.querySelector('[name=disc_llms_policy]')?.checked || false,
+        llms_txt_body: document.querySelector('[name=disc_llms_body]')?.value || '',
+        schema_organization: {
+          name: document.querySelector('[name=disc_org_name]')?.value || '',
+          url: document.querySelector('[name=disc_org_url]')?.value || '',
+          logo: document.querySelector('[name=disc_org_logo]')?.value || ''
+        }
+      };
+      document.getElementById('discoverability_settings_json').value = JSON.stringify(payload);
+      form.submit();
+    });
+  })();
+</script>

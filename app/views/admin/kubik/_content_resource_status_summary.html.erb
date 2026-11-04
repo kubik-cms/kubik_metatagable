@@ -1,0 +1,66 @@
+<%# locals: record, variant (:detailed | :compact | :index), host (optional) %>
+<% variant ||= :detailed %>
+<% summary = kubik_content_resource_index_reporting_summary(record) %>
+<% items = kubik_reporting_summary_items(record) %>
+<% list_class = ["kubik-reporting-summary", "kubik-reporting-summary--#{variant}"].join(" ") %>
+
+<ul class="<%= list_class %>" role="list" aria-label="Content status">
+  <% if kubik_content_resource_publishable?(record) %>
+    <% published = kubik_content_resource_published_index_status(record) %>
+    <% if published %>
+      <li class="kubik-reporting-summary__item">
+        <% if variant == :index %>
+          <span class="kubik-reporting-summary__status"
+                title="<%= published[:tooltip] %>"
+                aria-label="<%= published[:tooltip] %>">
+            <span class="kubik-reporting-indicator kubik-reporting-indicator--index kubik-reporting-indicator--<%= published[:status] %>"
+                  aria-hidden="true"></span>
+          </span>
+        <% else %>
+          <div class="kubik-reporting-summary__detail-row">
+            <span class="kubik-reporting-indicator kubik-reporting-indicator--<%= published[:status] %>"
+                  aria-hidden="true"></span>
+            <span class="kubik-reporting-summary__text">
+              <span class="kubik-reporting-summary__label">Publishing</span>
+              <% if variant == :detailed %>
+                <span class="kubik-reporting-summary__description">
+                  <%= kubik_content_resource_publishing_detail_text(record) %>
+                </span>
+              <% end %>
+            </span>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+
+  <% if kubik_content_resource_checks_summary?(record) %>
+    <% items.each do |item| %>
+      <% result = summary[item[:key]] || {} %>
+      <% status = (result[:status] || :unknown).to_s %>
+      <% label = item[:label] %>
+      <% tooltip = kubik_content_resource_reporting_index_tooltip(label, result) %>
+      <% link_label = kubik_content_resource_reporting_summary_link_label(label, result) %>
+      <% offcanvas = kubik_content_resource_index_status_offcanvas?(record, item) %>
+      <li class="kubik-reporting-summary__item">
+        <a class="kubik-reporting-summary__status kubik-reporting-summary__link<%= ' kubik-reporting-summary__detail-row' unless variant == :index %>"
+           href="<%= kubik_content_resource_index_status_href(record, item) %>"
+           title="<%= tooltip %>"
+           aria-label="<%= tooltip %>"
+           <% if offcanvas %>
+             data-action="click->kubik-offcanvas#openOffcanvas"
+             data-kubik-offcanvas-header-text="<%= label %>"
+             data-kubik-offcanvas-tone="white"
+           <% end %>>
+          <span class="kubik-reporting-indicator<%= ' kubik-reporting-indicator--index' if variant == :index %> kubik-reporting-indicator--<%= status %>"
+                aria-hidden="true"></span>
+          <% unless variant == :index %>
+            <span class="kubik-reporting-summary__text">
+              <span class="kubik-reporting-summary__label"><%= link_label %></span>
+            </span>
+          <% end %>
+        </a>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "devise"
   spec.add_development_dependency "pg"
   spec.add_dependency "nokogiri", ">= 1.0"
+  spec.add_dependency "ai-crawler-index", ">= 1.3"
   spec.add_dependency "rails"
   spec.add_development_dependency "warning"
 

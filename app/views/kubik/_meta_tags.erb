@@ -10,3 +10,9 @@
 <meta content='<%= kubik_meta_data(:twitter_title) %>' name='twitter:title'>
 <meta content='<%= kubik_meta_data(:twitter_description) %>' name='twitter:description'>
 <meta content='<%= kubik_meta_data(:twitter_image) %>' name='twitter:image'>
+<% if (robots_content = kubik_robots_meta_content).present? %>
+<meta name="robots" content="<%= robots_content %>">
+<% end %>
+<% if (canonical_href = kubik_canonical_href).present? %>
+<link rel="canonical" href="<%= canonical_href %>">
+<% end %>

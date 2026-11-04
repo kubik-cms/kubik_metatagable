@@ -1,0 +1,9 @@
+<%# locals: record %>
+<% if kubik_content_resource_checks_summary?(record) %>
+  <div class="kubik-admin-fieldset">
+    <%= render "active_admin/kubik/fieldset_header", title: "Summary" %>
+    <div class="kubik-admin-fieldset__body">
+      <%= render_kubik_reporting_summary(record) %>
+    </div>
+  </div>
+<% end %>

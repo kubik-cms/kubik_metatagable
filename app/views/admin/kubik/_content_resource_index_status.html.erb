@@ -1,0 +1,4 @@
+<%# locals: record — index column: traffic lights only; detail in native tooltips %>
+<% if kubik_content_resource_index_status?(record) %>
+  <%= render partial: "admin/kubik/content_resource_status_summary", locals: { record: record, variant: :index } %>
+<% end %>

@@ -33,6 +33,8 @@ module Kubik
               as: :metatagable,
               dependent: :destroy
 
+      include Kubik::ContentChecksCheckable
+
       before_save :apply_defaults
 
       accepts_nested_attributes_for :meta_tag, allow_destroy: true

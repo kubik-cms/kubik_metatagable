@@ -1,0 +1,9 @@
+<%# locals: record — labelled status rows at the bottom of the admin show Details panel %>
+<% if kubik_content_resource_index_status?(record) %>
+  <div class="kubik-admin-fieldset kubik-content-resource-details-status">
+    <%= render "active_admin/kubik/fieldset_header", title: "Summary" %>
+    <div class="kubik-admin-fieldset__body">
+      <%= render partial: "admin/kubik/content_resource_status_summary", locals: { record: record, variant: :detailed } %>
+    </div>
+  </div>
+<% end %>

@@ -108,6 +108,9 @@ And you can add similar setup to show action:
       tab "SEO" do
         render "admin/metatagable/show_seo_tab", metatagable: example
       end
+      tab "GEO" do
+        render "admin/metatagable/show_geo_tab", metatagable: example
+      end
       tab "Social" do
         render "admin/metatagable/show_social_tab", metatagable: example
       end

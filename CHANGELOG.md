@@ -1,5 +1,32 @@
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-04
+
+### Added
+
+- Content checks reporting: registry, runner, persistence, and `Kubik::ContentChecksReport` model with upgrade migrations.
+- GEO reporting tab, discoverability views, and admin content-resource helpers (checks summary, HTML quality offcanvas hooks).
+- `Kubik::Discoverability` integration, social meta backfill tasks, and expanded SEO/reporting admin partials.
+- Generators for `last_content_checks_report` / `kubik_content_checks_reports` tables.
+
+### Changed
+
+- Reporting admin helpers and summary indicators; reporting stylesheet for multi-check dashboards.
+- Meta tags partial and controller methods for canonical/robots alongside discoverability.
+- Upgrade generator covers new reporting columns and content-check tables.
+
+## [0.4.2] - 2026-10-19
+
+### Added
+
+- SEO reporting updates and canonical checks; social share preview refinements.
+
+## [0.4.0] - 2026-10-19
+
+### Added
+
+- Discoverability layer backed by `ai-crawler-index`: bot catalog, policy resolver, robots.txt and llms.txt routes, settings admin sidebar, robots/canonical in `kubik/meta_tags` partial.
+
 ## [0.3.2] - 2026-10-13
 
 ### Added
@@ -19,19 +46,7 @@
 - `Kubik::MetatagAdminHelper` and `admin/metatagable/*` partials for shared Active Admin Meta / preview UI.
 - `Kubik::Metatagable::SocialMetaResolver` and `KubikMetatagable::SocialMetaImages` for link preview data.
 - `register_canonical_path` on configuration for host-specific `og_url` paths.
-- `doc/admin_metatagable.md`.
-
-## [0.1.10] - 2026-09-28
-
-### Added
-
-- `kubik/metatagable/social_share_previews` partial for admin link previews via `kubik_interface_elements`.
-- `KubikMetatagable::VERSION` constant.
-
-### Changed
-
-- README documents social link preview integration.
 
 ## [0.1.0] - 2021-06-04
 
-- Initial release
+- Initial release.

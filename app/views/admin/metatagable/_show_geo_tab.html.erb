@@ -1,0 +1,7 @@
+<%# locals: metatagable (or resource / object) %>
+<% record = local_assigns[:metatagable] || local_assigns[:resource] || local_assigns[:object] %>
+<p class="quiet">
+  Generative engine optimization (GEO) checks cover AI crawler access, structured data, and page extractability.
+  Robots and AI blocking flags are edited on the SEO tab.
+</p>
+<%= render_kubik_reporting_geo_reports(metatagable: record, host: local_assigns[:host]) %>

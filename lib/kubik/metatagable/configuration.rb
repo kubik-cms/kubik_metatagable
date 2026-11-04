@@ -9,8 +9,17 @@ module Kubik
       attr_accessor :social_image_derivative
       attr_accessor :default_og_type_resolver
       attr_accessor :canonical_url_method
+      attr_accessor :content_checks_report_model
+      attr_accessor :content_checks_legacy_report_column
+      attr_accessor :content_checks_classes
+      attr_accessor :content_checks_default_host
+      attr_accessor :content_checks_enqueue_in_test
 
       def initialize
+        @content_checks_report_model = "Kubik::ContentChecksReport"
+        @content_checks_legacy_report_column = nil
+        @content_checks_classes = []
+        @content_checks_enqueue_in_test = false
         @canonical_path_resolvers = {}
         # When set, forces this derivative for all platforms (overrides social crop defaults).
         @social_image_derivative = nil

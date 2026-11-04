@@ -13,12 +13,24 @@ module Kubik
         def add_seo_settings_migration
           if seo_settings_columns_present?
             say "kubik_meta_tags SEO settings columns already present — no migration added.", :green
+          else
+            migration_template(
+              "migrations/add_seo_settings_to_kubik_meta_tags.rb.erb",
+              "db/migrate/add_seo_settings_to_kubik_meta_tags.rb",
+              migration_version: migration_version
+            )
+          end
+        end
+
+        def add_content_checks_migration
+          if content_checks_table_present?
+            say "kubik_content_checks_reports already exists — no migration added.", :green
             return
           end
 
           migration_template(
-            "migrations/add_seo_settings_to_kubik_meta_tags.rb.erb",
-            "db/migrate/add_seo_settings_to_kubik_meta_tags.rb",
+            "migrations/create_kubik_content_checks_reports.rb.erb",
+            "db/migrate/create_kubik_content_checks_reports.rb",
             migration_version: migration_version
           )
         end
@@ -37,6 +49,12 @@ module Kubik
           return false unless ActiveRecord::Base.connection.table_exists?(:kubik_meta_tags)
 
           ActiveRecord::Base.connection.column_exists?(:kubik_meta_tags, :share_enabled)
+        rescue StandardError
+          false
+        end
+
+        def content_checks_table_present?
+          ActiveRecord::Base.connection.table_exists?(:kubik_content_checks_reports)
         rescue StandardError
           false
         end

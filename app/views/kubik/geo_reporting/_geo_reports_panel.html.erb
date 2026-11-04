@@ -1,0 +1,33 @@
+<%# locals: report %>
+<div id="geo-reports" class="kubik-admin-fieldset kubik-reporting-detail">
+  <%= render partial: Kubik::MetatagAdminHelper.resolve_fieldset_header_partial(lookup_context),
+             locals: { title: "GEO reports" } %>
+  <div class="kubik-admin-fieldset__body">
+    <% linters = report[:linters] || [] %>
+    <% if linters.any? %>
+      <ul class="kubik-reporting-linters" role="list">
+        <% linters.each do |linter| %>
+          <% status = (linter[:status] || linter["status"]).to_s %>
+          <li class="kubik-reporting-linters__item">
+            <span class="kubik-reporting-indicator kubik-reporting-indicator--<%= status %>"
+                  aria-hidden="true"></span>
+            <div class="kubik-reporting-linters__content">
+              <span class="kubik-reporting-linters__label"><%= linter[:label] || linter["label"] %></span>
+              <% detail = linter[:message] || linter["message"] %>
+              <% if detail.present? %>
+                <span class="kubik-reporting-linters__message"><%= detail %></span>
+              <% elsif status == "green" %>
+                <span class="kubik-reporting-linters__message kubik-reporting-linters__message--ok">OK</span>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="kubik-reporting-detail__ok">No GEO issues detected.</p>
+    <% end %>
+    <p class="quiet">
+      Site-wide crawler and llms.txt settings are managed under Kubik Settings → Crawlers &amp; robots.
+    </p>
+  </div>
+</div>

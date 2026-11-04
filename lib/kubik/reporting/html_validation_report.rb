@@ -10,6 +10,10 @@ module Kubik
         return unknown_report unless column && record.respond_to?(column)
 
         raw_report = record.public_send(column)
+        from_raw(raw_report)
+      end
+
+      def from_raw(raw_report)
         report = raw_report.is_a?(Hash) ? raw_report : {}
         findings = report["findings"] || report[:findings] || []
         checked_at = report["checked_at"] || report[:checked_at]
@@ -20,7 +24,7 @@ module Kubik
           status: status,
           label: label_for(status),
           findings: findings,
-          checked_at: report["checked_at"] || report[:checked_at]
+          checked_at: checked_at
         }
       end
 

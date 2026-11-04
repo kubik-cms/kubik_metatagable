@@ -17,6 +17,16 @@ module Kubik
       meta_tag.robots_meta_content
     end
 
+    # JSON-LD should not be emitted when the page is hidden from crawlers (noindex).
+    def kubik_structured_data_enabled?
+      record = @kubik_metatagable || @kubik_structured_data_subject
+      meta = record&.meta_tag
+      return true unless meta
+      return true unless meta.has_attribute?(:robots_noindex)
+
+      !meta.robots_noindex?
+    end
+
     def kubik_canonical_href
       meta_tag = kubik_current_meta_tag
       override = if meta_tag&.has_attribute?(:canonical_url_override)
