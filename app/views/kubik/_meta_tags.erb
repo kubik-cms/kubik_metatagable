@@ -1,4 +1,10 @@
 <title><%= kubik_page_title %></title>
+<% if (canonical_href = kubik_meta_data(:og_url).presence || kubik_canonical_href).present? %>
+<link rel="canonical" href="<%= canonical_href %>">
+<% end %>
+<% if (robots_content = kubik_robots_meta_content).present? %>
+<meta name="robots" content="<%= robots_content %>">
+<% end %>
 <meta name="description" content='<%= kubik_meta_data(:meta_description) %>'>
 <meta content='<%= kubik_meta_data(:og_type) %>' property='og:type'>
 <meta content='<%= kubik_meta_data(:site_title) %>' property='og:site_name'>
@@ -10,9 +16,3 @@
 <meta content='<%= kubik_meta_data(:twitter_title) %>' name='twitter:title'>
 <meta content='<%= kubik_meta_data(:twitter_description) %>' name='twitter:description'>
 <meta content='<%= kubik_meta_data(:twitter_image) %>' name='twitter:image'>
-<% if (robots_content = kubik_robots_meta_content).present? %>
-<meta name="robots" content="<%= robots_content %>">
-<% end %>
-<% if (canonical_href = kubik_canonical_href).present? %>
-<link rel="canonical" href="<%= canonical_href %>">
-<% end %>

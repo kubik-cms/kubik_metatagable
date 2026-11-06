@@ -6,10 +6,12 @@ module Kubik
       attr_reader :render_error
 
       def self.for(record)
-        html, error = fetch_html(record)
-        return new(nil, render_error: error) if html.blank?
+        cache_key = "#{record.class.name}/#{record.id}"
+        cache = Thread.current[:kubik_reporting_rendered_documents] ||= {}
+        return cache[cache_key] if cache.key?(cache_key)
 
-        new(html)
+        html, error = fetch_html(record)
+        cache[cache_key] = html.blank? ? new(nil, render_error: error) : new(html)
       end
 
       def self.fetch_html(record)

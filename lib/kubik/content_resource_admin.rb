@@ -43,5 +43,17 @@ module Kubik
       route_key = klass.model_name.singular_route_key
       :"preview_#{route_key}_admin_#{route_key}_path"
     end
+
+    class << self
+      attr_accessor :preview_html_renderer, :content_versions_enabled
+
+      def content_versions_enabled?
+        flag = content_versions_enabled
+        return flag.call if flag.respond_to?(:call)
+        return flag unless flag.nil?
+
+        defined?(Kubik::ContentVersionAdminSupport)
+      end
+    end
   end
 end

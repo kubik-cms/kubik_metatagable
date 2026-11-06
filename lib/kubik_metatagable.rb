@@ -43,5 +43,7 @@ module Kubik
   require "kubik/reporting"
   require "kubik/metatagable/geo_reporting_integration"
   require "kubik/content_resource_admin"
+  require "kubik/content_resource_admin_support"
+  require "kubik/content_resource_admin_show"
   require "kubik/content_checks_checkable"
 end

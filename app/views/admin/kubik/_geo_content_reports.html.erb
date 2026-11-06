@@ -1,0 +1,6 @@
+<% metatagable = local_assigns.fetch(:metatagable) %>
+<% if metatagable.persisted? %>
+  <%= render "admin/metatagable/show_geo_tab", metatagable: metatagable %>
+<% else %>
+  <p class="inline-hints">Save this record to run GEO (generative engine optimization) checks.</p>
+<% end %>

@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+### Added
+
+- `Kubik::ContentResourceAdminSupport` / `ContentResourceAdminShow` with injectable preview HTML renderer.
+- Request-level cache for `Kubik::Reporting::RenderedDocument`.
+
+## [0.5.1] - 2026-11-06
+
 ## [0.5.0] - 2026-11-04
 
 ### Added
